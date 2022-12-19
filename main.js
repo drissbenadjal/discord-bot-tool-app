@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path')
-const { Client, Events, EmbedBuilder, SlashCommandBuilder } = require('discord.js');
+const { Client, Events, EmbedBuilder, SlashCommandBuilder, User } = require('discord.js');
 let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers'] });
 
 app.disableHardwareAcceleration();
@@ -80,7 +80,15 @@ app.whenReady().then(() => {
     }
     listChannel(serverID);
   });
-  
+
+  ipcMain.on('sendMessage', (event, data) => {
+    const sendMessage = (data) => {
+      client.guilds.cache.get(data.serverID).channels.cache.get(data.channelID).send(data.message);
+    }
+    sendMessage(data);
+    win.webContents.send('sendMessage', 'Message sent');
+  });
+
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
