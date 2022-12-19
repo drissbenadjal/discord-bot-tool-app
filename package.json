@@ -1,0 +1,17 @@
+{
+  "name": "launcheur",
+  "version": "1.0.0",
+  "description": "Template electron with splash screen, ipcMain",
+  "main": "main.js",
+  "author": "Driss Benadjal",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^21.3.1"
+  },
+  "dependencies": {
+    "discord.js": "^14.7.1"
+  }
+}
