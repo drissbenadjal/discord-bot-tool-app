@@ -14,6 +14,7 @@ app.whenReady().then(() => {
     minHeight: 560,
     maxHeight: 560,
     resizable: false,
+    icon: path.join(__dirname, "./assets/images/DiscordLogo.ico"),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
