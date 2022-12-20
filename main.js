@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path')
-const { Client, Events, EmbedBuilder, SlashCommandBuilder, User } = require('discord.js');
-let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers'] });
+const { Client, Events, EmbedBuilder, SlashCommandBuilder, User, Partials } = require('discord.js');
+let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers', 'DirectMessages', 'DirectMessageTyping'], partials: [Partials.Message, Partials.Channel, Partials.Reaction] });
 
 app.disableHardwareAcceleration();
 
@@ -34,16 +34,29 @@ app.whenReady().then(() => {
       win.webContents.send('discordResponse', 'Please enter a valid token');
       return;
     } else {
+
       client.login(DISCORD_BOT_TOKEN);
-      //if the token is invalid, the bot will not start
-      client.on(Events.ShardError, error => {
-        win.webContents.send('discordResponse', 'Please enter a valid token');
-        return;
+
+      client.on('error', (error) => {
+        win.webContents.send('discordResponse', 'Invalid token');
       });
       
       client.on('ready', () => {
         win.webContents.send('discordResponse', client.user.tag);
+        client.user.setStatus('online');
+        
+        //recuperer les messages privés
+        client.on('messageCreate', (message) => {
+            if (message.guild) return;
+            if (message.author.bot) return;
+            win.webContents.send('dmMessageCreate', {
+              'message' : message.content, 
+              'author' : message.author.username, 
+              'authorId' : message.author.id
+            });
+        });
       });
+
     }
   });
 
@@ -116,6 +129,11 @@ app.whenReady().then(() => {
     }
     sendMessage(data);
     win.webContents.send('sendMessage', 'Message sent');
+  });
+
+  ipcMain.on('sendDM', (event, data) => {
+    client.users.cache.get(data.id).send(data.message);
+    win.webContents.send('sendDM', 'DM sent');
   });
 
 

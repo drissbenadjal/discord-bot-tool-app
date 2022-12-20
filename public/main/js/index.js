@@ -28,3 +28,9 @@ setInterval(() => {
         });
     }
 }, 1);
+
+document.addEventListener('keydown', (event) => {
+    if (event.ctrlKey && event.key === 'r') {
+        event.preventDefault();
+    }
+});

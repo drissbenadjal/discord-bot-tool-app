@@ -266,3 +266,35 @@ select {
   text-decoration: underline;
   transition: all 0.2s ease-in-out;
 }
+
+#dmSender {
+  margin-bottom: 10px;
+}
+
+#dmSenderMessage {
+  margin-bottom: 10px;
+}
+
+.dm-message{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.dm-message p {
+  margin: 0;
+}
+
+.dm-message p span {
+  cursor: pointer;
+}
+
+.dm-message-content {
+  width: 100%;
+  padding: 10px 7px;
+  border-radius: 5px;
+  background-color: hsl(220, calc(1 * 7.7%), 15%);
+  font-size: 0.95rem;
+}

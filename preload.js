@@ -13,6 +13,7 @@ const API = {
     changeGameActivity: (Activity) => ipcRenderer.send("changeGameActivity", Activity),
     changeBotName: (name) => ipcRenderer.send("changeBotName", name),
     changeBotStatus: (status) => ipcRenderer.send("changeBotStatus", status),
+    sendDM: (data) => ipcRenderer.send("sendDM", data),
   },
 };
 
@@ -46,6 +47,7 @@ ipcRenderer.on("discordResponse", (event, arg) => {
   } else {
     popup.innerHTML = `<p>Logged in as ${arg}!</p>`;
     localStorage.setItem("start", "true");
+    document.body.appendChild(popup);
 
     /////////////////////////// SECTION ///////////////////////////
 
@@ -58,6 +60,11 @@ ipcRenderer.on("discordResponse", (event, arg) => {
     serverSection.id = "serverSection";
     serverSection.classList.add("hidden");
     document.querySelector("#started").appendChild(serverSection);
+
+    const dmSection = document.createElement("section");
+    dmSection.id = "dmSection";
+    dmSection.classList.add("hidden");
+    document.querySelector("#started").appendChild(dmSection);
 
     /////////////////////////// FIN SECTION ///////////////////////////
 
@@ -132,9 +139,43 @@ ipcRenderer.on("discordResponse", (event, arg) => {
       API.window.changeBotStatus(changeBotStatus.value);
     });
 
-    API.window.listServer();
+    const dmSenderTitle = document.createElement("h3");
+    dmSenderTitle.innerHTML = "DM Sender";
+    dmSection.appendChild(dmSenderTitle);
 
-    document.body.appendChild(popup);
+    const dmSender = document.createElement("input");
+    dmSender.type = "text";
+    dmSender.id = "dmSender";
+    dmSender.placeholder = "Enter user id";
+    dmSection.appendChild(dmSender);
+    
+    const dmSenderMessage = document.createElement("input");
+    dmSenderMessage.type = "text";
+    dmSenderMessage.id = "dmSenderMessage";
+    dmSenderMessage.placeholder = "Enter message";
+    dmSection.appendChild(dmSenderMessage);
+
+    const dmSenderBtn = document.createElement("button");
+    dmSenderBtn.classList.add("simple-btn");
+    dmSenderBtn.innerHTML = "Send DM";
+    dmSection.appendChild(dmSenderBtn);
+    dmSenderBtn.addEventListener("click", () => {
+      if (dmSender.value === "" || dmSenderMessage.value === "") {
+        popup.innerHTML = `<p>Enter user id or message</p>`;
+        document.body.appendChild(popup);
+        setTimeout(() => {
+          popup.remove();
+        }
+        , 3000);
+      }else{
+        API.window.sendDM({
+          'id': dmSender.value,
+          'message' : dmSenderMessage.value
+        });
+      }
+    });
+
+    API.window.listServer();
     setTimeout(() => {
       popup.remove();
       btnStopBot.disabled = false;
@@ -142,6 +183,47 @@ ipcRenderer.on("discordResponse", (event, arg) => {
     }, 3000);
 
   }
+});
+
+ipcRenderer.on("dmMessageCreate", (event, arg) => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>Nouveau dm de ${arg.author}</p>`;
+  document.body.appendChild(popup);
+  setTimeout(() => {
+    popup.remove();
+  }, 3000);
+
+  if(document.querySelector(".dm-message")){
+    
+  }else{
+    const dmMessageDiv = document.createElement("div");
+    dmMessageDiv.classList.add("dm-message");
+    dmSection.appendChild(dmMessageDiv);
+
+    const dmMessageTitle = document.createElement("h3");
+    dmMessageTitle.innerHTML = "DM Message";
+    dmMessageDiv.appendChild(dmMessageTitle);
+  }
+
+  const dmMessage = document.createElement("p");
+  dmMessage.classList.add("dm-message-content");
+  dmMessage.innerHTML = `<span data-id="${arg.authorId}">${arg.author}</span> : ${arg.message}`;
+  document.querySelector(".dm-message").appendChild(dmMessage);
+
+  document.querySelectorAll("[data-id]").forEach((author) => {
+    author.addEventListener("click", () => {
+      navigator.clipboard.writeText(author.dataset.id);
+      const popup = document.createElement("div");
+      popup.classList.add("popup");
+      popup.innerHTML = `<p>Id copied on clipboard and paste in field</p>`;
+      document.body.appendChild(popup);
+      document.querySelector("#dmSender").value = author.dataset.id;
+      setTimeout(() => {
+        popup.remove();
+      }, 3000);
+    });
+  });
 });
 
 ipcRenderer.on("changeBotName", (event, arg) => {
@@ -304,6 +386,22 @@ ipcRenderer.on("sendMessage", (event, arg) => {
   setTimeout(() => {
     popup.remove();
     document.querySelector("#chatSend").disabled = false;
+  }, 3000);
+});
+
+ipcRenderer.on("sendDM", (event, arg) => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>${arg}</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
   }, 3000);
 });
 
