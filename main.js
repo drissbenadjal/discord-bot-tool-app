@@ -23,10 +23,6 @@ app.whenReady().then(() => {
   win.loadFile('public/main/index.html')
 
   ipcMain.on('discordStart', (event, DISCORD_BOT_TOKEN) => {
-    client.on('ready', () => {
-      win.webContents.send('discordResponse', client.user.tag);
-    });
-
     if (DISCORD_BOT_TOKEN === null) {
       win.webContents.send('discordResponse', 'Please enter a valid token');
       return;
@@ -43,6 +39,10 @@ app.whenReady().then(() => {
         win.webContents.send('discordResponse', 'Please enter a valid token');
         return;
       });
+      
+      client.on('ready', () => {
+        win.webContents.send('discordResponse', client.user.tag);
+      });
     }
   });
 
@@ -51,6 +51,34 @@ app.whenReady().then(() => {
     client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers'] });
     win.webContents.send('discordResponse', 'Bot stopped');
     return
+  });
+
+  ipcMain.on('changeBotName', (event, data) => {
+    client.user.setUsername(data);
+    win.webContents.send('changeBotName', 'Bot name changed');
+  });
+
+  ipcMain.on('changeGameActivity', (event, data) => {
+      client.user.setPresence({ activities: [{ name: data }] });
+      win.webContents.send('changeGameActivity', 'Game activity changed');
+  });
+
+  ipcMain.on('changeBotStatus', (event, data) => {
+    if (data === 'online') {
+      client.user.setStatus('online');
+      win.webContents.send('changeBotStatus', 'Bot status changed');
+    } else if (data === 'idle') {
+      client.user.setStatus('idle');
+      win.webContents.send('changeBotStatus', 'Bot status changed');
+    } else if (data === 'dnd') {
+      client.user.setStatus('dnd');
+      win.webContents.send('changeBotStatus', 'Bot status changed');
+    } else if (data === 'invisible') {
+      client.user.setStatus('invisible');
+      win.webContents.send('changeBotStatus', 'Bot status changed');
+    } else {
+      win.webContents.send('changeBotStatus', 'Bot status not changed');
+    }
   });
 
   ipcMain.on('listServer', () => {

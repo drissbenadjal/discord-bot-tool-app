@@ -10,7 +10,9 @@ const API = {
     listServer: () => ipcRenderer.send("listServer"),
     listChannel: (serverID) => ipcRenderer.send("listChannel", serverID),
     sendMessage: (data) => ipcRenderer.send("sendMessage", data),
-    sendRequestFriend: (data) => ipcRenderer.send("sendRequestFriend", data),
+    changeGameActivity: (Activity) => ipcRenderer.send("changeGameActivity", Activity),
+    changeBotName: (name) => ipcRenderer.send("changeBotName", name),
+    changeBotStatus: (status) => ipcRenderer.send("changeBotStatus", status),
   },
 };
 
@@ -33,7 +35,7 @@ ipcRenderer.on("discordResponse", (event, arg) => {
   } else if (arg === "Bot stopped") {
     popup.innerHTML = `<p>${arg}</p>`;
     localStorage.setItem("start", "false");
-    document.querySelector("#serverSection").innerHTML = "";
+    document.querySelector("#started").innerHTML = "";
 
     document.body.appendChild(popup);
     setTimeout(() => {
@@ -44,6 +46,92 @@ ipcRenderer.on("discordResponse", (event, arg) => {
   } else {
     popup.innerHTML = `<p>Logged in as ${arg}!</p>`;
     localStorage.setItem("start", "true");
+
+    /////////////////////////// SECTION ///////////////////////////
+
+    const botInfosSection = document.createElement("section");
+    botInfosSection.id = "botInfos";
+    botInfosSection.classList.add("hidden");
+    document.querySelector("#started").appendChild(botInfosSection);
+
+    const serverSection = document.createElement("section");
+    serverSection.id = "serverSection";
+    serverSection.classList.add("hidden");
+    document.querySelector("#started").appendChild(serverSection);
+
+    /////////////////////////// FIN SECTION ///////////////////////////
+
+    const changeBotNameTitle = document.createElement("h3");
+    changeBotNameTitle.innerHTML = "Change bot name";
+    botInfosSection.appendChild(changeBotNameTitle);
+
+    const changeBotName = document.createElement("input");
+    changeBotName.type = "text";
+    changeBotName.placeholder = "Enter bot name";
+    const actualBotName = arg.split("#")[0];
+    changeBotName.value = `${actualBotName}`;
+    botInfosSection.appendChild(changeBotName);
+
+    const changeBotNameBtn = document.createElement("button");
+    changeBotNameBtn.classList.add("simple-btn");
+    changeBotNameBtn.innerHTML = "Change bot name";
+    botInfosSection.appendChild(changeBotNameBtn);
+    changeBotNameBtn.addEventListener("click", () => {
+      API.window.changeBotName(changeBotName.value);
+    });
+
+    const botGameActivityTitle = document.createElement("h3");
+    botGameActivityTitle.innerHTML = "Bot Game Activity";
+    botInfosSection.appendChild(botGameActivityTitle);
+    
+    const botGameActivity = document.createElement("input");
+    botGameActivity.type = "text";
+    botGameActivity.placeholder = "Enter bot Game Activity";
+    botInfosSection.appendChild(botGameActivity);
+    
+    const changeGameActivity = document.createElement("button");
+    changeGameActivity.classList.add("simple-btn");
+    changeGameActivity.innerHTML = "Change bot Game Activity";
+    botInfosSection.appendChild(changeGameActivity);
+    changeGameActivity.addEventListener("click", () => {
+      API.window.changeGameActivity(botGameActivity.value);
+    });
+
+    const changeBotStatusTitle = document.createElement("h3");
+    changeBotStatusTitle.innerHTML = "Change bot status";
+    botInfosSection.appendChild(changeBotStatusTitle);
+
+    const changeBotStatus = document.createElement("select");
+    botInfosSection.appendChild(changeBotStatus);
+    
+    const changeBotStatusOnline = document.createElement("option");
+    changeBotStatusOnline.value = "online";
+    changeBotStatusOnline.innerHTML = "Online";
+    changeBotStatus.appendChild(changeBotStatusOnline);
+
+    const changeBotStatusIdle = document.createElement("option");
+    changeBotStatusIdle.value = "idle";
+    changeBotStatusIdle.innerHTML = "Idle";
+    changeBotStatus.appendChild(changeBotStatusIdle);
+
+    const changeBotStatusDnd = document.createElement("option");
+    changeBotStatusDnd.value = "dnd";
+    changeBotStatusDnd.innerHTML = "Do not disturb";
+    changeBotStatus.appendChild(changeBotStatusDnd);
+
+    const changeBotStatusOffline = document.createElement("option");
+    changeBotStatusOffline.value = "invisible";
+    changeBotStatusOffline.innerHTML = "Offline";
+    changeBotStatus.appendChild(changeBotStatusOffline);
+
+    const changeBotStatusBtn = document.createElement("button");
+    changeBotStatusBtn.classList.add("simple-btn");
+    changeBotStatusBtn.innerHTML = "Change bot status";
+    botInfosSection.appendChild(changeBotStatusBtn);
+    changeBotStatusBtn.addEventListener("click", () => {
+      API.window.changeBotStatus(changeBotStatus.value);
+    });
+
     API.window.listServer();
 
     document.body.appendChild(popup);
@@ -54,6 +142,54 @@ ipcRenderer.on("discordResponse", (event, arg) => {
     }, 3000);
 
   }
+});
+
+ipcRenderer.on("changeBotName", (event, arg) => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>${arg}</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
+  }, 3000);
+});
+
+ipcRenderer.on("changeGameActivity", (event, arg) => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>${arg}</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
+  }, 3000);
+});
+
+ipcRenderer.on("changeBotStatus", (event, arg) => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>${arg}</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
+  }, 3000);
 });
 
 ipcRenderer.on("listServer", (event, arg) => {
@@ -132,6 +268,7 @@ ipcRenderer.on("listChannel", (event, arg) => {
       chatInput.type = "text";
       divChatSender.appendChild(chatInput);
       const chatSend = document.createElement("button");
+      chatSend.classList.add("simple-btn");
       chatSend.id = "chatSend";
       chatSend.innerHTML = "Send";
       divChatSender.appendChild(chatSend);
