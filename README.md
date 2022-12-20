@@ -10,6 +10,9 @@ Current features :
 - Change status
 - Message sender in servers
 
+Download lastVersion of Discord Bot Tools here :
+
+Soon
 
 You can download the project :
 
