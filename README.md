@@ -1,7 +1,4 @@
-<a href="https://github.com/drissbenadjal"><img src="" width="100%" /></a>
-<a href="https://github.com/drissbenadjal"><img src="https://user-images.githubusercontent.com/74878941/208704634-9e443163-3a23-4ec7-8e9b-d6d44503e643.png" width="20%" /></a>
-
-
+<a href="https://github.com/drissbenadjal"><img src="./discord-bot-tools.png" width="100%" /></a>
 
 ## Discord Bot Tools
 
@@ -13,6 +10,9 @@ Current features :
 - Change status
 - Message sender in servers
 
+Download lastVersion of Discord Bot Tools here :
+
+Soon
 
 You can download the project :
 
