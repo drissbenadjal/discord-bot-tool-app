@@ -3,6 +3,7 @@ const path = require('path')
 const { autoUpdater } = require("electron-updater");
 require('update-electron-app')()
 const { Client, Events, EmbedBuilder, SlashCommandBuilder, User, Partials } = require('discord.js');
+const { create } = require('domain');
 let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers', 'DirectMessages', 'DirectMessageTyping'], partials: [Partials.Message, Partials.Channel, Partials.Reaction] });
 
 app.disableHardwareAcceleration();
@@ -16,7 +17,8 @@ app.whenReady().then(() => {
     minHeight: 560,
     maxHeight: 560,
     resizable: false,
-    icon: path.join(__dirname, "./assets/images/DiscordLogo.ico"),
+    // icon: path.join(__dirname, "./assets/images/DiscordLogo.ico"),
+    icon: path.join(__dirname, "./assets/images/DiscordLogo.icns"),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -25,11 +27,6 @@ app.whenReady().then(() => {
   win.setMenuBarVisibility(false)
   win.loadFile('public/main/index.html')
 
-  
-  win.on("closed", function () {
-    win = null;
-  });
-  
   win.once("ready-to-show", () => {
     autoUpdater.checkForUpdatesAndNotify();
   });
@@ -42,7 +39,7 @@ app.whenReady().then(() => {
     if (DISCORD_BOT_TOKEN === null) {
       win.webContents.send('discordResponse', 'Please enter a valid token');
       return;
-    }else if (DISCORD_BOT_TOKEN === undefined) {
+    } else if (DISCORD_BOT_TOKEN === undefined) {
       win.webContents.send('discordResponse', 'Please enter a valid token');
       return;
     } else if (DISCORD_BOT_TOKEN === '') {
@@ -55,20 +52,20 @@ app.whenReady().then(() => {
       client.on('error', (error) => {
         win.webContents.send('discordResponse', 'Invalid token');
       });
-      
+
       client.on('ready', () => {
         win.webContents.send('discordResponse', client.user.tag);
         client.user.setStatus('online');
-        
+
         //recuperer les messages privés
         client.on('messageCreate', (message) => {
-            if (message.guild) return;
-            if (message.author.bot) return;
-            win.webContents.send('dmMessageCreate', {
-              'message' : message.content, 
-              'author' : message.author.username, 
-              'authorId' : message.author.id
-            });
+          if (message.guild) return;
+          if (message.author.bot) return;
+          win.webContents.send('dmMessageCreate', {
+            'message': message.content,
+            'author': message.author.username,
+            'authorId': message.author.id
+          });
         });
       });
 
@@ -88,8 +85,8 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on('changeGameActivity', (event, data) => {
-      client.user.setPresence({ activities: [{ name: data }] });
-      win.webContents.send('changeGameActivity', 'Game activity changed');
+    client.user.setPresence({ activities: [{ name: data }] });
+    win.webContents.send('changeGameActivity', 'Game activity changed');
   });
 
   ipcMain.on('changeBotStatus', (event, data) => {
@@ -111,17 +108,17 @@ app.whenReady().then(() => {
   });
 
   ipcMain.on('listServer', () => {
-  const listServer = () => {
-    const server = [];
-    client.guilds.cache.forEach((guild) => {
-      server.push({
-        "name": guild.name, 
-        "id": guild.id
+    const listServer = () => {
+      const server = [];
+      client.guilds.cache.forEach((guild) => {
+        server.push({
+          "name": guild.name,
+          "id": guild.id
+        });
       });
-    });
-    win.webContents.send('listServer', server);
-  }
-  listServer();
+      win.webContents.send('listServer', server);
+    }
+    listServer();
   });
 
   ipcMain.on('listChannel', (event, serverID) => {
@@ -129,7 +126,7 @@ app.whenReady().then(() => {
       const channelList = [];
       client.guilds.cache.get(serverID).channels.cache.filter(channel => channel.type === 0).forEach((channel) => {
         channelList.push({
-          "name": channel.name, 
+          "name": channel.name,
           "id": channel.id
         });
       });
@@ -151,13 +148,7 @@ app.whenReady().then(() => {
     win.webContents.send('sendDM', 'DM sent');
   });
 
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
-})
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

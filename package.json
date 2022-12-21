@@ -5,7 +5,7 @@
   "main": "main.js",
   "author": "Driss Benadjal",
   "license": "MIT",
-  "icon": "./assets/images/DiscordLogo.ico",
+  "icon": "./assets/images/DiscordLogo.icns",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder build --mac --win --publish never",
@@ -14,6 +14,18 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/drissbenadjal/discord-bot-tool-app.git"
+  },
+  "build": {
+    "appId": "dev.drissbenadjal.discordBotTools",
+    "productName": "Discord Bot Tools",
+    "copyright": "Driss Benadjal",
+    "mac": {
+      "icon": "./assets/images/DiscordLogo.icns",
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "icon": "./assets/images/DiscordLogo.png"
+    }
   },
   "devDependencies": {
     "electron": "^21.3.1",
