@@ -9,6 +9,7 @@ Current features :
 - Change game status
 - Change status
 - Message sender in servers
+- Message sender in private
 
 Download lastVersion of Discord Bot Tools here :
 
