@@ -2,6 +2,45 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 window.addEventListener("DOMContentLoaded", () => {});
 
+ipcRenderer.on("update_available", () => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>A new update is available. Downloading now...</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
+  }, 3000);
+});
+ipcRenderer.on("update_downloaded", () => {
+  const popup = document.createElement("div");
+  popup.classList.add("popup");
+  popup.innerHTML = `<p>Update Downloaded. It will be installed on restart. Restart now</p>`;
+  document.body.appendChild(popup);
+  document.querySelectorAll(".simple-btn").forEach((btn) => {
+    btn.disabled = true;
+  });
+  setTimeout(() => {
+    popup.remove();
+    document.querySelectorAll(".simple-btn").forEach((btn) => {
+      btn.disabled = false;
+    });
+    ipcRenderer.send("restart_app");
+  }, 3000);
+});
+
+function closeNotification() {
+  notification.classList.add("hidden");
+}
+function restartApp() {
+  ipcRenderer.send("restart_app");
+}
+
 const API = {
   window: {
     discordStart: (DISCORD_BOT_TOKEN) =>

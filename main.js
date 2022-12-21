@@ -1,5 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path')
+const { autoUpdater } = require("electron-updater");
+require('update-electron-app')()
 const { Client, Events, EmbedBuilder, SlashCommandBuilder, User, Partials } = require('discord.js');
 let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers', 'DirectMessages', 'DirectMessageTyping'], partials: [Partials.Message, Partials.Channel, Partials.Reaction] });
 
@@ -22,6 +24,19 @@ app.whenReady().then(() => {
 
   win.setMenuBarVisibility(false)
   win.loadFile('public/main/index.html')
+
+  
+  win.on("closed", function () {
+    win = null;
+  });
+  
+  win.once("ready-to-show", () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+
+  ipcMain.on("restart_app", () => {
+    autoUpdater.quitAndInstall();
+  });
 
   ipcMain.on('discordStart', (event, DISCORD_BOT_TOKEN) => {
     if (DISCORD_BOT_TOKEN === null) {
@@ -149,3 +164,10 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+autoUpdater.on("update-available", () => {
+  win.webContents.send("update_available");
+});
+autoUpdater.on("update-downloaded", () => {
+  win.webContents.send("update_downloaded");
+});

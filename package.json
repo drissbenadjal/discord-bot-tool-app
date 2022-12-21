@@ -1,18 +1,27 @@
 {
-  "name": "launcheur",
+  "name": "discord-bot-tools-app",
   "version": "1.0.0",
-  "description": "Template electron with splash screen, ipcMain",
+  "description": "App discord tools app",
   "main": "main.js",
   "author": "Driss Benadjal",
   "license": "MIT",
   "icon": "./assets/images/DiscordLogo.ico",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder build --mac --win --publish never",
+    "deploy": "electron-builder build --mac --win --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drissbenadjal/discord-bot-tool-app.git"
   },
   "devDependencies": {
-    "electron": "^21.3.1"
+    "electron": "^21.3.1",
+    "electron-builder": "^23.6.0"
   },
   "dependencies": {
-    "discord.js": "^14.7.1"
+    "discord.js": "^14.7.1",
+    "electron-updater": "^5.3.0",
+    "update-electron-app": "^2.0.1"
   }
 }
