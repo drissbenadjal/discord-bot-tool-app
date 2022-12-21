@@ -147,6 +147,13 @@ app.whenReady().then(() => {
     client.users.cache.get(data.id).send(data.message);
     win.webContents.send('sendDM', 'DM sent');
   });
+    
+  autoUpdater.on("update-available", () => {
+    win.webContents.send("update_available");
+  });
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update_downloaded");
+  });
 
 });
 
@@ -155,10 +162,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-autoUpdater.on("update-available", () => {
-  win.webContents.send("update_available");
-});
-autoUpdater.on("update-downloaded", () => {
-  win.webContents.send("update_downloaded");
-});
