@@ -1,2 +1,4 @@
 node_modules
 electron-builder.yml
+dist
+.DS_Store

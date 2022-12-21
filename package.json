@@ -15,18 +15,6 @@
     "type": "git",
     "url": "https://github.com/drissbenadjal/discord-bot-tool-app.git"
   },
-  "build": {
-    "appId": "dev.drissbenadjal.discordBotTools",
-    "productName": "Discord Bot Tools",
-    "copyright": "Driss Benadjal",
-    "mac": {
-      "icon": "./assets/images/DiscordLogo.icns",
-      "category": "public.app-category.utilities"
-    },
-    "win": {
-      "icon": "./assets/images/DiscordLogo.png"
-    }
-  },
   "devDependencies": {
     "electron": "^21.3.1",
     "electron-builder": "^23.6.0"
