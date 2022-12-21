@@ -11,9 +11,9 @@ Current features :
 - Message sender in servers
 - Message sender in private
 
-Download lastVersion of Discord Bot Tools here :
+Download last Version of Discord Bot app Tools here :
 
-Soon
+[V 1.0.0 mac and windows](https://github.com/drissbenadjal/discord-bot-tool-app/releases/tag/v1.0.0)
 
 You can download the project :
 
