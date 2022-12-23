@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-window.addEventListener("DOMContentLoaded", () => {});
+window.addEventListener("DOMContentLoaded", () => { });
 
 ipcRenderer.on("update_available", () => {
   const popup = document.createElement("div");
@@ -129,12 +129,12 @@ ipcRenderer.on("discordResponse", (event, arg) => {
     const botGameActivityTitle = document.createElement("h3");
     botGameActivityTitle.innerHTML = "Bot Game Activity";
     botInfosSection.appendChild(botGameActivityTitle);
-    
+
     const botGameActivity = document.createElement("input");
     botGameActivity.type = "text";
     botGameActivity.placeholder = "Enter bot Game Activity";
     botInfosSection.appendChild(botGameActivity);
-    
+
     const changeGameActivity = document.createElement("button");
     changeGameActivity.classList.add("simple-btn");
     changeGameActivity.innerHTML = "Change bot Game Activity";
@@ -149,7 +149,7 @@ ipcRenderer.on("discordResponse", (event, arg) => {
 
     const changeBotStatus = document.createElement("select");
     botInfosSection.appendChild(changeBotStatus);
-    
+
     const changeBotStatusOnline = document.createElement("option");
     changeBotStatusOnline.value = "online";
     changeBotStatusOnline.innerHTML = "Online";
@@ -187,7 +187,7 @@ ipcRenderer.on("discordResponse", (event, arg) => {
     dmSender.id = "dmSender";
     dmSender.placeholder = "Enter user id";
     dmSection.appendChild(dmSender);
-    
+
     const dmSenderMessage = document.createElement("input");
     dmSenderMessage.type = "text";
     dmSenderMessage.id = "dmSenderMessage";
@@ -205,11 +205,11 @@ ipcRenderer.on("discordResponse", (event, arg) => {
         setTimeout(() => {
           popup.remove();
         }
-        , 3000);
-      }else{
+          , 3000);
+      } else {
         API.window.sendDM({
           'id': dmSender.value,
-          'message' : dmSenderMessage.value
+          'message': dmSenderMessage.value
         });
       }
     });
@@ -233,9 +233,9 @@ ipcRenderer.on("dmMessageCreate", (event, arg) => {
     popup.remove();
   }, 3000);
 
-  if(document.querySelector(".dm-message")){
-    
-  }else{
+  if (document.querySelector(".dm-message")) {
+
+  } else {
     const dmMessageDiv = document.createElement("div");
     dmMessageDiv.classList.add("dm-message");
     dmSection.appendChild(dmMessageDiv);
@@ -403,14 +403,14 @@ ipcRenderer.on("listChannel", (event, arg) => {
           });
           chatInput.value = "";
           document.querySelector("#chatSend").disabled = true;
-        }else{
-        const popup = document.createElement("div");
-        popup.classList.add("popup");
-        popup.innerHTML = `<p>Please enter a message</p>`;
-        document.body.appendChild(popup);
-        setTimeout(() => {
-          popup.remove();
-        }, 3000);
+        } else {
+          const popup = document.createElement("div");
+          popup.classList.add("popup");
+          popup.innerHTML = `<p>Please enter a message</p>`;
+          document.body.appendChild(popup);
+          setTimeout(() => {
+            popup.remove();
+          }, 3000);
         }
       });
     }
