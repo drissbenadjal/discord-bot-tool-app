@@ -56,13 +56,6 @@ const API = {
   },
 };
 
-const githubLink = document.querySelectorAll("#githubLink");
-githubLink.forEach((link) => {
-  link.addEventListener("click", () => {
-    API.window.openGithubLink();
-  });
-});
-
 ipcRenderer.on("discordResponse", (event, arg) => {
   const btnStartBot = document.querySelector("#StartBot");
   const btnStopBot = document.querySelector("#StopBot");

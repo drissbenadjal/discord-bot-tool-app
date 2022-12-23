@@ -34,3 +34,11 @@ document.addEventListener('keydown', (event) => {
         event.preventDefault();
     }
 });
+
+const githubLink = document.querySelectorAll("#githubLink");
+githubLink.forEach((element) => {
+    console.log(element)
+    element.addEventListener('click', () => {
+        app.window.openGithubLink();
+    });
+});

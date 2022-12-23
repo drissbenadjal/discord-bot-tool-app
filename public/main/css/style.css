@@ -67,6 +67,10 @@ body {
   z-index: 999;
 }
 
+.github #githubLink {
+  cursor: pointer;
+}
+
 .github img {
   width: 40px;
   height: 40px;
