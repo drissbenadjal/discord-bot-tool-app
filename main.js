@@ -7,8 +7,8 @@ let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences',
 
 app.disableHardwareAcceleration();
 
-app.whenReady().then(() => {
-  async function createWindow() {
+async function createWindow() {
+  app.whenReady().then(() => {
     const win = new BrowserWindow({
       width: 400,
       minWidth: 400,
@@ -154,16 +154,16 @@ app.whenReady().then(() => {
     autoUpdater.on("update-downloaded", () => {
       win.webContents.send("update_downloaded");
     });
-  }
-  createWindow();
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
   });
+}
+createWindow();
 
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
