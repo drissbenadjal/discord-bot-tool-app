@@ -43,8 +43,7 @@ function restartApp() {
 
 const API = {
   window: {
-    discordStart: (DISCORD_BOT_TOKEN) =>
-      ipcRenderer.send("discordStart", DISCORD_BOT_TOKEN),
+    discordStart: (DISCORD_BOT_TOKEN) => ipcRenderer.send("discordStart", DISCORD_BOT_TOKEN),
     discordStop: () => ipcRenderer.send("discordStop"),
     listServer: () => ipcRenderer.send("listServer"),
     listChannel: (serverID) => ipcRenderer.send("listChannel", serverID),
@@ -53,8 +52,16 @@ const API = {
     changeBotName: (name) => ipcRenderer.send("changeBotName", name),
     changeBotStatus: (status) => ipcRenderer.send("changeBotStatus", status),
     sendDM: (data) => ipcRenderer.send("sendDM", data),
+    openGithubLink: () => ipcRenderer.send("openGithubLink"),
   },
 };
+
+const githubLink = document.querySelectorAll("#githubLink");
+githubLink.forEach((link) => {
+  link.addEventListener("click", () => {
+    API.window.openGithubLink();
+  });
+});
 
 ipcRenderer.on("discordResponse", (event, arg) => {
   const btnStartBot = document.querySelector("#StartBot");

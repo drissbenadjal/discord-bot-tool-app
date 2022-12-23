@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path')
 const { autoUpdater } = require("electron-updater");
 require('update-electron-app')()
@@ -146,6 +146,10 @@ async function createWindow() {
     ipcMain.on('sendDM', (event, data) => {
       client.users.cache.get(data.id).send(data.message);
       win.webContents.send('sendDM', 'DM sent');
+    });
+
+    ipcMain.on('openGithubLink', () => {
+      shell.openExternal('https://github.com/drissbenadjal');
     });
 
     autoUpdater.on("update-available", () => {
