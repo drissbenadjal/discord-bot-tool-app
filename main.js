@@ -3,7 +3,6 @@ const path = require('path')
 const { autoUpdater } = require("electron-updater");
 require('update-electron-app')()
 const { Client, Events, EmbedBuilder, SlashCommandBuilder, User, Partials } = require('discord.js');
-const { create } = require('domain');
 let client = new Client({ intents: ['Guilds', 'GuildMessages', 'GuildPresences', 'MessageContent', 'GuildMembers', 'DirectMessages', 'DirectMessageTyping'], partials: [Partials.Message, Partials.Channel, Partials.Reaction] });
 
 app.disableHardwareAcceleration();
